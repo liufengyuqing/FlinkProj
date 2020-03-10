@@ -142,6 +142,7 @@ public class DataReport {
         /**
          * 把计算的结果存储到es中
          */
+/*
 
         List<HttpHost> httpHosts = new ArrayList<>();
         httpHosts.add(new HttpHost("127.0.0.1", 9200, "http"));
@@ -171,6 +172,7 @@ public class DataReport {
 
 // configuration for the bulk requests; this instructs the sink to emit after every element, otherwise they would be buffered
         esSinkBuilder.setBulkFlushMaxActions(1);
+*/
 
 
 

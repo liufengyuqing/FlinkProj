@@ -11,6 +11,7 @@
     <modules>
         <module>DataClean</module>
         <module>DataReport</module>
+        <module>FlinkExample</module>
     </modules>
 
     <properties>
@@ -38,25 +39,27 @@
                 <artifactId>flink-java</artifactId>
                 <version>${flink.version}</version>
                 <!-- provided在这表示此依赖只在代码编译的时候使用，运行和打包的时候不使用 -->
-                <!--                <scope>provided</scope>-->
+                 <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.flink</groupId>
                 <artifactId>flink-streaming-java_${scala.binary.version}</artifactId>
                 <version>${flink.version}</version>
-                <!--                <scope>provided</scope>-->
+                 <scope>provided</scope>
             </dependency>
+
+            <!-- Flink-Scala 的依赖 -->
             <dependency>
                 <groupId>org.apache.flink</groupId>
                 <artifactId>flink-scala_${scala.binary.version}</artifactId>
                 <version>${flink.version}</version>
-                <!--                <scope>provided</scope>-->
+                 <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.flink</groupId>
                 <artifactId>flink-streaming-scala_${scala.binary.version}</artifactId>
                 <version>${flink.version}</version>
-                <!--                <scope>provided</scope>-->
+                <scope>provided</scope>
             </dependency>
             <!--   =========  第三方连接器依赖 ==============================   -->
 
@@ -103,6 +106,14 @@
                 <version>2.9.0</version>
             </dependency>
 
+            <!-- https://mvnrepository.com/artifact/org.apache.bahir/flink-connector-redis -->
+            <dependency>
+                <groupId>org.apache.bahir</groupId>
+                <artifactId>flink-connector-redis_2.11</artifactId>
+                <version>1.0</version>
+            </dependency>
+
+
             <!--   =========  数据库及驱动依赖 ==============================   -->
             <!--   mysql 依赖    -->
             <dependency>
@@ -143,6 +154,15 @@
                 <version>${flink.version}</version>
             </dependency>
 
+            <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>1.18.8</version>
+                <scope>provided</scope>
+            </dependency>
+
+
         </dependencies>
 
     </dependencyManagement>
@@ -160,7 +180,40 @@
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
-            <!-- 打包插件 -->
+
+
+            <!-- scala编译插件 -->
+            <plugin>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>scala-maven-plugin</artifactId>
+                <version>3.1.6</version>
+                <configuration>
+                    <scalaCompatVersion>${scala.binary.version}</scalaCompatVersion>
+                    <scalaVersion>${scala.version}</scalaVersion>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>compile-scala</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>test-compile-scala</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+
+            <!--  打jar包插件(会包含所有依赖) -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
@@ -169,18 +222,19 @@
                     <archive>
                         <manifest>
                             <!--这里要替换成jar包main方法所在类 -->
-                            <mainClass>cn.edu.nwsuaf.DataClean</mainClass>
+                            <mainClass>cn.edu.nwsuaf.streaming.StreamingSocketWindowWordCountJava</mainClass>
                         </manifest>
                         <manifestEntries>
                             <Class-Path>.</Class-Path>
                         </manifestEntries>
                     </archive>
                     <!-- 配置描述符文件 assembly.xml文件路径 -->
-                    <!--                    <descriptor>src/main/assembly/assembly.xml</descriptor>-->
+                    <!-- <descriptor>src/main/assembly/assembly.xml</descriptor>-->
                     <!-- 也可以使用Maven预配置的描述符-->
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
+
                 </configuration>
                 <executions>
                     <execution>
