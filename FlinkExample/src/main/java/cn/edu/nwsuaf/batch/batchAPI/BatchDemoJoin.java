@@ -1,6 +1,7 @@
 package cn.edu.nwsuaf.batch.batchAPI;
 
 import org.apache.flink.api.common.functions.JoinFunction;
+import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.functions.MapPartitionFunction;
 import org.apache.flink.api.java.ExecutionEnvironment;
 import org.apache.flink.api.java.operators.DataSource;
@@ -44,6 +45,16 @@ public class BatchDemoJoin {
                     @Override
                     public Tuple3<Integer, String, String> join(Tuple2<Integer, String> first, Tuple2<Integer, String> second) throws Exception {
                         return new Tuple3<Integer, String, String>(first.f0, first.f1, second.f1);
+                    }
+                }).print();
+
+
+        text1.join(text2).where(0)
+                .equalTo(0)
+                .map(new MapFunction<Tuple2<Tuple2<Integer, String>, Tuple2<Integer, String>>, Tuple3<Integer, String, String>>() {
+                    @Override
+                    public Tuple3<Integer, String, String> map(Tuple2<Tuple2<Integer, String>, Tuple2<Integer, String>> value) throws Exception {
+                        return new Tuple3<>(value.f0.f0, value.f0.f1, value.f1.f1);
                     }
                 }).print();
 

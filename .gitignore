@@ -4,3 +4,10 @@
 
 
 .DS_Store
+*.class
+/out/production/DataReport/cn/edu/nwsuaf/DataReport$1.class
+/out/production/DataReport/cn/edu/nwsuaf/DataReport$2.class
+/out/production/DataReport/cn/edu/nwsuaf/DataReport.class
+/target/FlinkPro-1.0-SNAPSHOT-jar-with-dependencies.jar
+/out/production/DataReport/cn/edu/nwsuaf/function/MyAggFunction.class
+/out/production/DataReport/cn/edu/nwsuaf/watermark/MyWaterMark.class

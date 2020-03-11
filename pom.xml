@@ -39,13 +39,13 @@
                 <artifactId>flink-java</artifactId>
                 <version>${flink.version}</version>
                 <!-- provided在这表示此依赖只在代码编译的时候使用，运行和打包的时候不使用 -->
-                 <scope>provided</scope>
+                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.flink</groupId>
                 <artifactId>flink-streaming-java_${scala.binary.version}</artifactId>
                 <version>${flink.version}</version>
-                 <scope>provided</scope>
+                <scope>provided</scope>
             </dependency>
 
             <!-- Flink-Scala 的依赖 -->
@@ -53,7 +53,7 @@
                 <groupId>org.apache.flink</groupId>
                 <artifactId>flink-scala_${scala.binary.version}</artifactId>
                 <version>${flink.version}</version>
-                 <scope>provided</scope>
+                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.flink</groupId>
@@ -68,6 +68,7 @@
                 <artifactId>flink-connector-redis_${scala.binary.version}</artifactId>
                 <version>1.0</version>
             </dependency>
+
             <!-- flink-statebackend :rocksdb 连接器依赖 -->
             <dependency>
                 <groupId>org.apache.flink</groupId>
@@ -221,7 +222,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <!--这里要替换成jar包main方法所在类 -->
+                            <!--这里要替换成jar包main方法所在类[可选] -->
                             <mainClass>cn.edu.nwsuaf.streaming.StreamingSocketWindowWordCountJava</mainClass>
                         </manifest>
                         <manifestEntries>
