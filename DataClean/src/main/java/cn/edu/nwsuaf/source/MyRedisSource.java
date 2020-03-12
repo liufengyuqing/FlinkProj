@@ -25,6 +25,8 @@ import java.util.Map;
  * hset areas  AREA_IN   IN
  * <p>
  * 需要把大区和国家的对应关系组装成 java 的 hashmap
+ * <p>
+ * 通过国家获取大区
  */
 
 
@@ -35,15 +37,14 @@ public class MyRedisSource implements SourceFunction<HashMap<String, String>> {
 
     private final long SLEEP_MILLION = 5000;
     private boolean isRunning = true;
+    //提到外面 最后可以把连接关掉
     private Jedis jedis = null;
 
     @Override
     public void run(SourceContext<HashMap<String, String>> sourceContext) throws Exception {
-
-
         jedis = new Jedis("localhost", 6379);
 
-        //  存储所有国家和大区的对应关系
+        //存储所有国家和大区的对应关系
         HashMap<String, String> keyValuesMap = new HashMap<>();
         while (isRunning) {
             try {
@@ -53,6 +54,7 @@ public class MyRedisSource implements SourceFunction<HashMap<String, String>> {
                 for (Map.Entry<String, String> entry : areas.entrySet()) {
                     String key = entry.getKey();
                     String value = entry.getValue();
+                    //切分valuses
                     String[] splits = value.split(",");
                     for (String split : splits) {
                         keyValuesMap.put(split, key);
@@ -82,6 +84,9 @@ public class MyRedisSource implements SourceFunction<HashMap<String, String>> {
     @Override
     public void cancel() {
         isRunning = false;
+        if (jedis != null) {
+            jedis.close();
+        }
 
     }
 }

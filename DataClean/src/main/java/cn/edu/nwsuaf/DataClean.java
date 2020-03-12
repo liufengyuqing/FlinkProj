@@ -74,7 +74,6 @@ public class DataClean {
         DataStream<HashMap<String, String>> mapData = env.addSource(new MyRedisSource()).broadcast();//  可以把数据发送到后面算子的所有并行实际例中进行计算，否则处理数据丢失数据
 
         //  通过 connect 方法将两个数据流连接在一起,然后再flatMap
-        //
         SingleOutputStreamOperator resData = data.connect(mapData).flatMap(new CoFlatMapFunction<String, HashMap<String, String>, String>() {
 
             //存储国家码和大区的映射关系
@@ -112,8 +111,6 @@ public class DataClean {
         });
 
         String outTopic = "allDataClean";
-
-
         Properties outprop = new Properties();
         outprop.setProperty("bootstrap.servers", "localhost:9092");
         //第一种解决方案，设置FlinkKafkaProducer011里面的事务超时时间
@@ -121,8 +118,8 @@ public class DataClean {
         outprop.setProperty("transaction.timeout.ms", 60000 * 15 + "");
         //第二种解决方案，设置kafka的最大事务超时时间
 
-
-        FlinkKafkaProducer011<String> stringFlinkKafkaProducer = new FlinkKafkaProducer011<String>(outTopic, new SimpleStringSchema(), outprop);
+        FlinkKafkaProducer011<String> stringFlinkKafkaProducer = new FlinkKafkaProducer011<String>(outTopic,
+                new KeyedSerializationSchemaWrapper<String>(new SimpleStringSchema()), outprop, FlinkKafkaProducer011.Semantic.EXACTLY_ONCE);
 
         //FlinkKafkaProducer011<String> stringFlinkKafkaProducer = new FlinkKafkaProducer011<String>(outTopic, new SimpleStringSchema(), outprop);
         resData.addSink(stringFlinkKafkaProducer);

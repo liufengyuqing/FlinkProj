@@ -1,15 +1,14 @@
 package cn.edu.nwsuaf.watermark;
 
+import org.apache.flink.api.java.tuple.Tuple3;
 import org.apache.flink.streaming.api.functions.AssignerWithPeriodicWatermarks;
 import org.apache.flink.streaming.api.watermark.Watermark;
-import redis.clients.jedis.Tuple;
-import scala.Tuple3;
 
 import javax.annotation.Nullable;
 
 /**
  * @ClassName: MyWaterMark
- * @Description: TODO
+ * @Description: 自定义Watermark
  * @Create by: liuzhiwei
  * @Date: 2020/3/8 6:31 下午
  */
@@ -29,7 +28,7 @@ public class MyWaterMark implements AssignerWithPeriodicWatermarks<Tuple3<Long, 
 
     @Override
     public long extractTimestamp(Tuple3<Long, String, String> element, long previousElementTimestamp) {
-        Long timestamp = element._1();
+        Long timestamp = element.f0;
         currentMaxTimestamp = Math.max(currentMaxTimestamp, timestamp);
         return timestamp;
     }
